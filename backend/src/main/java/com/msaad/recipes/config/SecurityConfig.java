@@ -47,11 +47,12 @@ public class SecurityConfig {
                 .map(u -> User
                         .withUsername(u.getUsername())
                         .password(u.getPassword())
-                        .roles("USER")
+                        .roles(u.getRole())
                         .build()
                 )
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
