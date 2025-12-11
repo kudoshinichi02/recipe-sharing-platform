@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RecipeService {
 
@@ -58,4 +60,12 @@ public class RecipeService {
 
         return recipeMapper.toResponse(savedRecipe);
     }
+
+    public List<RecipeResponseDTO> getAllRecipes() {
+        return recipeRepository.findAll()
+                .stream()
+                .map(recipeMapper::toResponse)
+                .toList();
+    }
+
 }

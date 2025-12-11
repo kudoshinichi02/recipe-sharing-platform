@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/recipes")
 public class RecipeController {
@@ -24,4 +26,11 @@ public class RecipeController {
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    @GetMapping
+    public ResponseEntity<List<RecipeResponseDTO>> getAllRecipes() {
+        List<RecipeResponseDTO> recipes = recipeService.getAllRecipes();
+        return new ResponseEntity<>(recipes, HttpStatus.OK);
+    }
+
 }
