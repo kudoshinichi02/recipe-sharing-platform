@@ -68,4 +68,13 @@ public class RecipeService {
                 .toList();
     }
 
+    public RecipeResponseDTO getRecipeById(Long id) {
+
+        Recipe recipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new RecipeException("Recipe with ID " + id + " not found"));
+
+        return recipeMapper.toResponse(recipe);
+    }
+
+
 }

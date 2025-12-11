@@ -33,4 +33,12 @@ public class RecipeController {
         return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<RecipeResponseDTO> getRecipeById(@PathVariable Long id) {
+
+        RecipeResponseDTO recipe = recipeService.getRecipeById(id);
+
+        return new ResponseEntity<>(recipe, HttpStatus.OK);
+    }
+
 }
