@@ -76,5 +76,17 @@ public class RecipeService {
         return recipeMapper.toResponse(recipe);
     }
 
+    public List<RecipeResponseDTO> searchByIngredient(String ingredient) {
+
+        if (ingredient == null || ingredient.isBlank()) {
+            throw new RecipeException("Ingredient must not be empty");
+        }
+
+        List<Recipe> recipes = recipeRepository.findByIngredientsContainingIgnoreCase(ingredient);
+
+        return recipes.stream()
+                .map(recipeMapper::toResponse)
+                .toList();
+    }
 
 }

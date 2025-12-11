@@ -41,4 +41,14 @@ public class RecipeController {
         return new ResponseEntity<>(recipe, HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<RecipeResponseDTO>> searchByIngredient(
+            @RequestParam String ingredient) {
+
+        List<RecipeResponseDTO> results = recipeService.searchByIngredient(ingredient);
+
+        return new ResponseEntity<>(results, HttpStatus.OK);
+    }
+
+
 }
