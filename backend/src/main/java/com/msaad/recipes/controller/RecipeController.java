@@ -3,6 +3,7 @@ package com.msaad.recipes.controller;
 import com.msaad.recipes.requestDTOs.RecipeRequestDTO;
 import com.msaad.recipes.responseDTOs.RecipeResponseDTO;
 import com.msaad.recipes.service.RecipeService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,16 @@ public class RecipeController {
 
         return new ResponseEntity<>(recipe, HttpStatus.OK);
     }
+
+    @GetMapping("/paged")
+    public ResponseEntity<Page<RecipeResponseDTO>> getRecipesPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<RecipeResponseDTO> recipes = recipeService.getAllRecipes(page, size);
+        return new ResponseEntity<>(recipes, HttpStatus.OK);
+    }
+
 
     @GetMapping("/search")
     public ResponseEntity<List<RecipeResponseDTO>> searchByIngredient(

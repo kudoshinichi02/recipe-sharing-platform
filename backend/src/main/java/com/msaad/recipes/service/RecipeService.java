@@ -9,6 +9,9 @@ import com.msaad.recipes.repository.RecipeRepository;
 import com.msaad.recipes.repository.UserRepository;
 import com.msaad.recipes.requestDTOs.RecipeRequestDTO;
 import com.msaad.recipes.responseDTOs.RecipeResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -67,6 +70,13 @@ public class RecipeService {
                 .map(recipeMapper::toResponse)
                 .toList();
     }
+
+    public Page<RecipeResponseDTO> getAllRecipes(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return recipeRepository.findAll(pageable)
+                .map(recipeMapper::toResponse);
+    }
+
 
     public RecipeResponseDTO getRecipeById(Long id) {
 
