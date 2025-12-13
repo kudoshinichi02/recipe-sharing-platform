@@ -147,6 +147,22 @@ public class RecipeService {
         return recipeMapper.toResponse(updatedRecipe);
     }
 
+    public void deleteRecipe(Long recipeId) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RecipeException("Recipe not found"));
+
+        if (!recipe.getCreatedBy().getUsername().equals(username)) {
+            throw new RecipeException("You are not allowed to delete this recipe");
+        }
+
+        recipeRepository.delete(recipe);
+    }
+
+
 
 
 }
