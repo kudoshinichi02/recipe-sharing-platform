@@ -68,6 +68,16 @@ public class RecipeController {
         return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<RecipeResponseDTO> updateRecipe(
+            @PathVariable Long id,
+            @RequestBody RecipeRequestDTO dto) {
+
+        RecipeResponseDTO updatedRecipe = recipeService.updateRecipe(id, dto);
+        return new ResponseEntity<>(updatedRecipe, HttpStatus.OK);
+    }
+
+
 
 
 }

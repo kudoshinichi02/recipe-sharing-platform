@@ -112,5 +112,41 @@ public class RecipeService {
                 .toList();
     }
 
+    public RecipeResponseDTO updateRecipe(Long recipeId, RecipeRequestDTO dto) {
+
+        String username = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RecipeException("Recipe not found"));
+
+        if (!recipe.getCreatedBy().getUsername().equals(username)) {
+            throw new RecipeException("You are not allowed to update this recipe");
+        }
+
+        if (dto.title() != null && !dto.title().isBlank()) {
+            recipe.setTitle(dto.title());
+        }
+
+        if (dto.description() != null && !dto.description().isBlank()) {
+            recipe.setDescription(dto.description());
+        }
+
+        if (dto.ingredients() != null && !dto.ingredients().isBlank()) {
+            recipe.setIngredients(dto.ingredients());
+        }
+
+        if (dto.instructions() != null && !dto.instructions().isBlank()) {
+            recipe.setInstructions(dto.instructions());
+        }
+
+        Recipe updatedRecipe = recipeRepository.save(recipe);
+
+        return recipeMapper.toResponse(updatedRecipe);
+    }
+
+
 
 }
