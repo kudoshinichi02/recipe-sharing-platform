@@ -6,8 +6,8 @@
 node_modules/
 dist/
 
-# Java
-target/
+# Java / Spring
+backend/target/
 *.class
 
 # OS
