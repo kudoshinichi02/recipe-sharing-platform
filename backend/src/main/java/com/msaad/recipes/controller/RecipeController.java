@@ -61,5 +61,13 @@ public class RecipeController {
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
+    @GetMapping("/my")
+    public ResponseEntity<List<RecipeResponseDTO>> getMyRecipes() {
+
+        List<RecipeResponseDTO> recipes = recipeService.getMyRecipes();
+        return new ResponseEntity<>(recipes, HttpStatus.OK);
+    }
+
+
 
 }

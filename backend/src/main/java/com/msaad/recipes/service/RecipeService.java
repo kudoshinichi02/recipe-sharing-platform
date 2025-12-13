@@ -99,4 +99,18 @@ public class RecipeService {
                 .toList();
     }
 
+    public List<RecipeResponseDTO> getMyRecipes() {
+
+        String username = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        return recipeRepository.findByCreatedByUsername(username)
+                .stream()
+                .map(recipeMapper::toResponse)
+                .toList();
+    }
+
+
 }
