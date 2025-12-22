@@ -1,9 +1,26 @@
-function App() {
-    return (
-        <div>
-            <h1>Recipe Sharing Platform</h1>
-        </div>
-    )
-}
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
 
-export default App
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import CreateRecipe from "./pages/CreateRecipe";
+import MyRecipes from "./pages/MyRecipes";
+import RecipeDetails from "./pages/RecipeDetails";
+
+export default function App() {
+    return (
+        <>
+            <Navbar />
+
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/create" element={<CreateRecipe />} />
+                <Route path="/my-recipes" element={<MyRecipes />} />
+                <Route path="/recipes/:id" element={<RecipeDetails />} />
+            </Routes>
+        </>
+    );
+}
