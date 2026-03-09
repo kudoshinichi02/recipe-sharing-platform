@@ -21,6 +21,21 @@ export default function MyRecipes() {
       });
   }, [username]);
 
+  const handleDelete = (id) => {
+    if (!window.confirm("Are you sure you want to delete this recipe?")) {
+      return;
+    }
+
+    api
+      .delete(`/recipes/${id}`)
+      .then(() => {
+        setRecipes(recipes.filter((recipe) => recipe.id !== id));
+      })
+      .catch((error) => {
+        console.error("Error deleting recipe:", error);
+      });
+  };
+
   return (
     <div>
       <h1>My Recipes</h1>
@@ -30,7 +45,12 @@ export default function MyRecipes() {
       ) : (
         <ul>
           {recipes.map((recipe) => (
-            <li key={recipe.id}>{recipe.title}</li>
+            <li key={recipe.id}>
+              {recipe.title}{" "}
+              <button onClick={() => handleDelete(recipe.id)}>
+                Delete
+              </button>
+            </li>
           ))}
         </ul>
       )}
