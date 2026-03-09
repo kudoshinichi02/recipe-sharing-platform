@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
 export default function MyRecipes() {
   const [recipes, setRecipes] = useState([]);
 
   const username = localStorage.getItem("username");
+  const navigate = useNavigate();
 
   useEffect(() => {
     api
@@ -47,6 +49,9 @@ export default function MyRecipes() {
           {recipes.map((recipe) => (
             <li key={recipe.id}>
               {recipe.title}{" "}
+              <button onClick={() => navigate(`/edit/${recipe.id}`)}>
+                Edit
+              </button>{" "}
               <button onClick={() => handleDelete(recipe.id)}>
                 Delete
               </button>
