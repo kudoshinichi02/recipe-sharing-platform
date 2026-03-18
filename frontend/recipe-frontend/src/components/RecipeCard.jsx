@@ -19,7 +19,7 @@ export default function RecipeCard({ recipe }) {
       "https://hips.hearstapps.com/hmg-prod/images/greek-salad-index-642f292397bbf.jpg",
 
     "Tomato Soup":
-      "https://www.allrecipes.com/thmb/EGp48npVJqDku38H1CFWwgwfAmM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/57661-tomato-bisque-iii-VAT-007-4x3.jpg",
+      "https://cdn.loveandlemons.com/wp-content/uploads/2023/01/tomato-soup-recipe.jpg",
 
     "Pizza":
       "https://images.unsplash.com/photo-1548365328-9f547fb0953c",
