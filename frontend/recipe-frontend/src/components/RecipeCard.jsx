@@ -7,56 +7,71 @@ export default function RecipeCard({ recipe }) {
       "https://images.unsplash.com/photo-1608756687911-aa1599ab3bd9",
 
     "Chicken Curry":
-      "https://images.unsplash.com/photo-1604908176997-4319c73b1b42",
+      "https://www.foodandwine.com/thmb/8YAIANQTZnGpVWj2XgY0dYH1V4I=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/spicy-chicken-curry-FT-RECIPE0321-58f84fdf7b484e7f86894203eb7834e7.jpg",
 
     "Beef Tacos":
-      "https://images.unsplash.com/photo-1615870216519-2f9fa575fa5c",
+      "https://images.unsplash.com/photo-1552332386-f8dd00dc2f85",
 
     "Pancakes":
       "https://images.unsplash.com/photo-1528207776546-365bb710ee93",
 
     "Greek Salad":
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd",
+      "https://hips.hearstapps.com/hmg-prod/images/greek-salad-index-642f292397bbf.jpg",
 
     "Tomato Soup":
-      "https://images.unsplash.com/photo-1547592180-85f173990554"
+      "https://www.allrecipes.com/thmb/EGp48npVJqDku38H1CFWwgwfAmM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/57661-tomato-bisque-iii-VAT-007-4x3.jpg",
+
+    "Pizza":
+      "https://images.unsplash.com/photo-1548365328-9f547fb0953c",
+
+    "Fried Rice":
+      "https://www.everydayeasyeats.com/wp-content/uploads/2016/06/Chinese-Fried-Rice-2.jpg",
+
+    "Grilled Cheese":
+      "https://www.allrecipes.com/thmb/pnEUcAXDg5GUJ77fUDzZp41NWkE=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/AR-238891.jpg",
+
+    "Caesar Salad":
+      "https://images.unsplash.com/photo-1550304943-4f24f54ddde9"
   };
 
-  const image =
-    imageMap[recipe.title] ||
+  const defaultImage =
     "https://images.unsplash.com/photo-1490645935967-10de6ba17061";
 
+  const image = imageMap[recipe.title] || defaultImage;
+
   return (
-    <div className="col-md-4 mb-4">
-      <div className="card h-100 shadow-sm">
+    <div className="card h-100 shadow border-0 rounded-4 overflow-hidden">
 
-        <img
-          src={image}
-          className="card-img-top"
-          alt={recipe.title}
-          style={{ height: "200px", objectFit: "cover" }}
-        />
+      <img
+        src={image}
+        alt={recipe.title}
+        style={{
+          width: "100%",
+          height: "200px",
+          objectFit: "cover",
+          display: "block"
+        }}
+      />
 
-        <div className="card-body">
+      <div className="card-body d-flex flex-column">
 
-          <h5 className="card-title">{recipe.title}</h5>
+        <h5 className="card-title fw-bold">{recipe.title}</h5>
 
-          <p className="card-text">
-            {recipe.description}
-          </p>
+        <p className="card-text text-muted">
+          {recipe.description}
+        </p>
 
-          <p className="text-muted small">
-            By {recipe.createdByUsername}
-          </p>
+        <p className="text-secondary small mt-auto">
+          👨‍🍳 {recipe.createdByUsername}
+        </p>
 
-          <Link
-            to={`/recipes/${recipe.id}`}
-            className="btn btn-primary"
-          >
-            View Recipe
-          </Link>
+        <Link
+          to={`/recipes/${recipe.id}`}
+          className="btn btn-dark w-100 mt-2 rounded-pill"
+        >
+          View Recipe
+        </Link>
 
-        </div>
       </div>
     </div>
   );

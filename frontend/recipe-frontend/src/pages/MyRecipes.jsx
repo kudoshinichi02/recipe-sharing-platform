@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import RecipeCard from "../components/RecipeCard";
 
 export default function MyRecipes() {
   const [recipes, setRecipes] = useState([]);
@@ -39,26 +40,43 @@ export default function MyRecipes() {
   };
 
   return (
-    <div>
-      <h1>My Recipes</h1>
+    <div className="container mt-4">
+
+      <h1 className="mb-4">My Recipes</h1>
 
       {recipes.length === 0 ? (
         <p>You have not created any recipes yet.</p>
       ) : (
-        <ul>
+        <div className="row g-4">
           {recipes.map((recipe) => (
-            <li key={recipe.id}>
-              {recipe.title}{" "}
-              <button onClick={() => navigate(`/edit/${recipe.id}`)}>
-                Edit
-              </button>{" "}
-              <button onClick={() => handleDelete(recipe.id)}>
-                Delete
-              </button>
-            </li>
+            <div key={recipe.id} className="col-md-4">
+
+              <RecipeCard recipe={recipe} />
+
+              {/* ✅ FIXED BUTTONS */}
+              <div className="d-flex gap-2 mt-2">
+
+                <button
+                  className="btn btn-outline-warning w-50 rounded-pill"
+                  onClick={() => navigate(`/edit/${recipe.id}`)}
+                >
+                  ✏️ Edit
+                </button>
+
+                <button
+                  className="btn btn-outline-danger w-50 rounded-pill"
+                  onClick={() => handleDelete(recipe.id)}
+                >
+                  🗑 Delete
+                </button>
+
+              </div>
+
+            </div>
           ))}
-        </ul>
+        </div>
       )}
+
     </div>
   );
 }
