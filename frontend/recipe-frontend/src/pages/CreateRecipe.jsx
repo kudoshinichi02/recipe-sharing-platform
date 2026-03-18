@@ -1,27 +1,27 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
 export default function CreateRecipe() {
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [instructions, setInstructions] = useState("");
 
+  const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newRecipe = {
+    api.post("/recipes", {
       title,
       description,
       ingredients,
       instructions,
-    };
-
-    api
-      .post("/recipes", newRecipe)
-      .then((response) => {
-        console.log("Recipe created:", response.data);
-        alert("Recipe created successfully!");
+    })
+      .then(() => {
+        navigate("/");
       })
       .catch((error) => {
         console.error("Error creating recipe:", error);
@@ -29,51 +29,76 @@ export default function CreateRecipe() {
   };
 
   return (
-    <div>
-      <h1>Create Recipe</h1>
+    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "80vh" }}>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Title</label>
-          <br />
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
+      <div className="card shadow border-0 rounded-4 p-4" style={{ width: "100%", maxWidth: "600px" }}>
 
-        <div>
-          <label>Description</label>
-          <br />
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
+        <h2 className="text-center mb-4 fw-bold">🍳 Create Recipe</h2>
 
-        <div>
-          <label>Ingredients</label>
-          <br />
-          <textarea
-            value={ingredients}
-            onChange={(e) => setIngredients(e.target.value)}
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
 
-        <div>
-          <label>Instructions</label>
-          <br />
-          <textarea
-            value={instructions}
-            onChange={(e) => setInstructions(e.target.value)}
-          />
-        </div>
+          {/* TITLE */}
+          <div className="mb-3">
+            <label className="form-label">Title</label>
+            <input
+              type="text"
+              className="form-control rounded-pill"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
 
-        <br />
+          {/* DESCRIPTION */}
+          <div className="mb-3">
+            <label className="form-label">Description</label>
+            <textarea
+              className="form-control rounded-4"
+              rows="2"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Short description of the recipe..."
+              required
+            />
+          </div>
 
-        <button type="submit">Create Recipe</button>
-      </form>
+          {/* INGREDIENTS */}
+          <div className="mb-3">
+            <label className="form-label">Ingredients</label>
+            <textarea
+              className="form-control rounded-4"
+              rows="3"
+              value={ingredients}
+              onChange={(e) => setIngredients(e.target.value)}
+              placeholder="e.g. chicken, rice, spices..."
+              required
+            />
+          </div>
+
+          {/* INSTRUCTIONS */}
+          <div className="mb-3">
+            <label className="form-label">Instructions</label>
+            <textarea
+              className="form-control rounded-4"
+              rows="4"
+              value={instructions}
+              onChange={(e) => setInstructions(e.target.value)}
+              placeholder="Describe how to prepare the recipe..."
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-dark w-100 rounded-pill mt-3"
+          >
+            Create Recipe
+          </button>
+
+        </form>
+
+      </div>
+
     </div>
   );
 }

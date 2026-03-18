@@ -1,62 +1,72 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
-function Register() {
+export default function Register() {
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleRegister = (e) => {
     e.preventDefault();
 
-    const newUser = {
-      username: username,
-      password: password,
-    };
-
-    api
-      .post("/auth/register", newUser)
-      .then((response) => {
-        console.log("User registered:", response.data);
+    api.post("/auth/register", {
+      username,
+      password,
+    })
+      .then(() => {
         alert("Registration successful!");
+        navigate("/login");
       })
-      .catch((error) => {
-        console.error("Registration error:", error);
+      .catch(() => {
+        alert("Registration failed");
       });
   };
 
   return (
-    <div>
-      <h2>Register</h2>
+    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "80vh" }}>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username</label>
-          <br />
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
+      <div className="card shadow border-0 rounded-4 p-4" style={{ width: "100%", maxWidth: "400px" }}>
 
-        <br />
+        <h2 className="text-center mb-4 fw-bold">📝 Register</h2>
 
-        <div>
-          <label>Password</label>
-          <br />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+        <form onSubmit={handleRegister}>
 
-        <br />
+          <div className="mb-3">
+            <label className="form-label">Username</label>
+            <input
+              type="text"
+              className="form-control rounded-pill"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
 
-        <button type="submit">Register</button>
-      </form>
+          <div className="mb-3">
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              className="form-control rounded-pill"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-dark w-100 rounded-pill mt-3"
+          >
+            Register
+          </button>
+
+        </form>
+
+      </div>
+
     </div>
   );
 }
-
-export default Register;
