@@ -17,50 +17,66 @@ export default function Home() {
       });
   }, []);
 
-  // ✅ Improved filter (title + ingredients)
   const filteredRecipes = recipes.filter((recipe) => {
     const searchText = search.toLowerCase();
 
-    const titleMatch =
-      recipe.title?.toLowerCase().includes(searchText);
-
-    const ingredientsMatch =
-      recipe.ingredients?.toLowerCase().includes(searchText);
-
-    return titleMatch || ingredientsMatch;
+    return (
+      recipe.title?.toLowerCase().includes(searchText) ||
+      recipe.ingredients?.toLowerCase().includes(searchText)
+    );
   });
 
   return (
-    <div className="container mt-4">
+    <div>
 
-      <h1 className="mb-4">All Recipes</h1>
-
-      {/* ✅ SEARCH BAR */}
-      <div className="mb-4">
-        <input
-          type="text"
-          className="form-control rounded-pill"
-          placeholder="🔍 Search by title or ingredients..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      {/* ✅ HERO SECTION */}
+      <div
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1495521821757-a1efb6729352')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          padding: "80px 20px",
+          color: "white",
+          textAlign: "center"
+        }}
+      >
+        <h1 className="fw-bold display-4">
+          🍽️ Discover & Share Recipes
+        </h1>
+        <p className="lead">
+          Find your next favorite meal or share your own creations
+        </p>
       </div>
 
-      <div className="row">
+      <div className="container mt-4">
 
-        {filteredRecipes.length === 0 ? (
-          <p>No recipes found.</p>
-        ) : (
-          filteredRecipes.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              recipe={recipe}
-            />
-          ))
-        )}
+        <h2 className="mb-4">All Recipes</h2>
+
+        {/* SEARCH */}
+        <div className="mb-4">
+          <input
+            type="text"
+            className="form-control rounded-pill"
+            placeholder="🔍 Search by title or ingredients..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        <div className="row">
+
+          {filteredRecipes.length === 0 ? (
+            <p>No recipes found.</p>
+          ) : (
+            filteredRecipes.map((recipe) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+            ))
+          )}
+
+        </div>
 
       </div>
-
     </div>
   );
 }
