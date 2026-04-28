@@ -8,6 +8,7 @@ import CreateRecipe from "./pages/CreateRecipe";
 import MyRecipes from "./pages/MyRecipes";
 import RecipeDetails from "./pages/RecipeDetails";
 import EditRecipe from "./pages/EditRecipe";
+import Favorites from "./pages/Favorites"; // Added Import
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/my-recipes" element={<MyRecipes />} />
         <Route path="/recipes/:id" element={<RecipeDetails />} />
         <Route path="/edit/:id" element={<EditRecipe />} />
+        <Route path="/favorites" element={<Favorites />} /> {/* Added Route */}
       </Routes>
     </>
   );

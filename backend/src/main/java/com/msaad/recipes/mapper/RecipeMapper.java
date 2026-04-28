@@ -15,6 +15,7 @@ public class RecipeMapper {
                 .description(dto.description())
                 .ingredients(dto.ingredients())
                 .instructions(dto.instructions())
+                .category(dto.category())
                 .createdBy(user)
                 .build();
     }
@@ -26,6 +27,7 @@ public class RecipeMapper {
                 .description(recipe.getDescription())
                 .ingredients(recipe.getIngredients())
                 .instructions(recipe.getInstructions())
+                .category(recipe.getCategory())
                 .createdByUsername(recipe.getCreatedBy().getUsername())
                 .build();
     }

@@ -4,5 +4,6 @@ public record RecipeRequestDTO(
         String title,
         String description,
         String ingredients,
-        String instructions
+        String instructions,
+        String category
 ) {}

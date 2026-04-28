@@ -3,13 +3,23 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
 export default function CreateRecipe() {
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [instructions, setInstructions] = useState("");
+  const [category, setCategory] = useState("General"); 
 
   const navigate = useNavigate();
+
+  const categories = [
+    "General",
+    "Indian",
+    "Chinese",
+    "Italian",
+    "Mexican",
+    "Dessert",
+    "Breakfast"
+  ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,6 +29,7 @@ export default function CreateRecipe() {
       description,
       ingredients,
       instructions,
+      category, 
     })
       .then(() => {
         navigate("/");
@@ -30,13 +41,10 @@ export default function CreateRecipe() {
 
   return (
     <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "80vh" }}>
-
       <div className="card shadow border-0 rounded-4 p-4" style={{ width: "100%", maxWidth: "600px" }}>
-
         <h2 className="text-center mb-4 fw-bold">🍳 Create Recipe</h2>
 
         <form onSubmit={handleSubmit}>
-
           {/* TITLE */}
           <div className="mb-3">
             <label className="form-label">Title</label>
@@ -47,6 +55,21 @@ export default function CreateRecipe() {
               onChange={(e) => setTitle(e.target.value)}
               required
             />
+          </div>
+
+          {/* CATEGORY DROPDOWN */}
+          <div className="mb-3">
+            <label className="form-label">Category (Cuisine)</label>
+            <select 
+              className="form-select rounded-pill" 
+              value={category} 
+              onChange={(e) => setCategory(e.target.value)}
+              required
+            >
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
           </div>
 
           {/* DESCRIPTION */}
@@ -94,11 +117,8 @@ export default function CreateRecipe() {
           >
             Create Recipe
           </button>
-
         </form>
-
       </div>
-
     </div>
   );
 }

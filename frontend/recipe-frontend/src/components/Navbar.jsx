@@ -14,8 +14,7 @@ export default function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
-
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand fw-bold" to="/">
           RecipeShare
         </Link>
 
@@ -29,9 +28,7 @@ export default function Navbar() {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarNav">
-
           <ul className="navbar-nav me-auto">
-
             <li className="nav-item">
               <Link className="nav-link" to="/">
                 Home
@@ -51,13 +48,17 @@ export default function Navbar() {
                     My Recipes
                   </Link>
                 </li>
+
+                <li className="nav-item">
+                  <Link className="nav-link" to="/favorites">
+                    Favorites ❤️
+                  </Link>
+                </li>
               </>
             )}
-
           </ul>
 
           <ul className="navbar-nav">
-
             {!username ? (
               <>
                 <li className="nav-item">
@@ -90,9 +91,7 @@ export default function Navbar() {
                 </li>
               </>
             )}
-
           </ul>
-
         </div>
       </div>
     </nav>

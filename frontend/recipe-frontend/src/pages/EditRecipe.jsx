@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axios";
 
 export default function EditRecipe() {
-
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -11,6 +10,17 @@ export default function EditRecipe() {
   const [description, setDescription] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [instructions, setInstructions] = useState("");
+  const [category, setCategory] = useState("General");
+
+  const categories = [
+    "General",
+    "Indian",
+    "Chinese",
+    "Italian",
+    "Mexican",
+    "Dessert",
+    "Breakfast"
+  ];
 
   useEffect(() => {
     api.get(`/recipes/${id}`)
@@ -20,6 +30,7 @@ export default function EditRecipe() {
         setDescription(r.description);
         setIngredients(r.ingredients);
         setInstructions(r.instructions);
+        setCategory(r.category || "General");
       })
       .catch((error) => {
         console.error("Error loading recipe:", error);
@@ -34,6 +45,7 @@ export default function EditRecipe() {
       description,
       ingredients,
       instructions,
+      category
     })
       .then(() => {
         navigate("/my-recipes");
@@ -45,14 +57,9 @@ export default function EditRecipe() {
 
   return (
     <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "80vh" }}>
-
       <div className="card shadow border-0 rounded-4 p-4" style={{ width: "100%", maxWidth: "600px" }}>
-
         <h2 className="text-center mb-4 fw-bold">✏️ Edit Recipe</h2>
-
         <form onSubmit={handleSubmit}>
-
-          {/* TITLE */}
           <div className="mb-3">
             <label className="form-label">Title</label>
             <input
@@ -64,7 +71,20 @@ export default function EditRecipe() {
             />
           </div>
 
-          {/* DESCRIPTION */}
+          <div className="mb-3">
+            <label className="form-label">Category (Cuisine)</label>
+            <select 
+              className="form-select rounded-pill" 
+              value={category} 
+              onChange={(e) => setCategory(e.target.value)}
+              required
+            >
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
+
           <div className="mb-3">
             <label className="form-label">Description</label>
             <textarea
@@ -76,7 +96,6 @@ export default function EditRecipe() {
             />
           </div>
 
-          {/* INGREDIENTS */}
           <div className="mb-3">
             <label className="form-label">Ingredients</label>
             <textarea
@@ -88,7 +107,6 @@ export default function EditRecipe() {
             />
           </div>
 
-          {/* INSTRUCTIONS */}
           <div className="mb-3">
             <label className="form-label">Instructions</label>
             <textarea
@@ -100,17 +118,11 @@ export default function EditRecipe() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="btn btn-dark w-100 rounded-pill mt-3"
-          >
+          <button type="submit" className="btn btn-dark w-100 rounded-pill mt-3">
             Update Recipe
           </button>
-
         </form>
-
       </div>
-
     </div>
   );
 }

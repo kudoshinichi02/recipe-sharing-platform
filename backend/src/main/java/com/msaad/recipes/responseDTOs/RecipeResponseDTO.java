@@ -9,5 +9,6 @@ public record RecipeResponseDTO(
         String description,
         String ingredients,
         String instructions,
+        String category,
         String createdByUsername
 ) {}

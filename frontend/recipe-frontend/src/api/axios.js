@@ -8,7 +8,6 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  // Do NOT attach auth when registering
   if (config.url === "/auth/register") {
     return config;
   }

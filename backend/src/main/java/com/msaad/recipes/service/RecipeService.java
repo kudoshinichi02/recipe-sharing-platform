@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,38 +35,31 @@ public class RecipeService {
     }
 
     public RecipeResponseDTO createRecipe(RecipeRequestDTO dto) {
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserException("Authenticated user not found"));
 
-        if (dto.title() == null || dto.title().isBlank()) {
-            throw new RecipeException("Title must not be empty");
-        }
-
-        if (dto.description() == null || dto.description().isBlank()) {
-            throw new RecipeException("Description must not be empty");
-        }
-
-        if (dto.ingredients() == null || dto.ingredients().isBlank()) {
-            throw new RecipeException("Ingredients must not be empty");
-        }
-
-        if (dto.instructions() == null || dto.instructions().isBlank()) {
-            throw new RecipeException("Instructions must not be empty");
-        }
+        validateDto(dto);
 
         Recipe recipe = recipeMapper.toEntity(dto, user);
 
-        Recipe savedRecipe = recipeRepository.save(recipe);
+        recipe.setCategory(dto.category());
 
+        Recipe savedRecipe = recipeRepository.save(recipe);
         return recipeMapper.toResponse(savedRecipe);
     }
 
     public List<RecipeResponseDTO> getAllRecipes() {
         return recipeRepository.findAll()
+                .stream()
+                .map(recipeMapper::toResponse)
+                .toList();
+    }
+
+    public List<RecipeResponseDTO> getRecipesByCategory(String category) {
+        return recipeRepository.findByCategoryIgnoreCase(category)
                 .stream()
                 .map(recipeMapper::toResponse)
                 .toList();
@@ -77,48 +71,59 @@ public class RecipeService {
                 .map(recipeMapper::toResponse);
     }
 
-
     public RecipeResponseDTO getRecipeById(Long id) {
-
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new RecipeException("Recipe with ID " + id + " not found"));
-
         return recipeMapper.toResponse(recipe);
     }
 
     public List<RecipeResponseDTO> searchByIngredient(String ingredient) {
-
         if (ingredient == null || ingredient.isBlank()) {
             throw new RecipeException("Ingredient must not be empty");
         }
-
-        List<Recipe> recipes = recipeRepository.findByIngredientsContainingIgnoreCase(ingredient);
-
-        return recipes.stream()
+        return recipeRepository.findByIngredientsContainingIgnoreCase(ingredient)
+                .stream()
                 .map(recipeMapper::toResponse)
                 .toList();
     }
 
     public List<RecipeResponseDTO> getMyRecipes() {
-
-        String username = SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName();
-
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return recipeRepository.findByCreatedByUsername(username)
                 .stream()
                 .map(recipeMapper::toResponse)
                 .toList();
     }
 
+    public List<RecipeResponseDTO> getFavoriteRecipes() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserException("User not found"));
+
+        return user.getFavoriteRecipes().stream()
+                .map(recipeMapper::toResponse)
+                .toList();
+    }
+
+    @Transactional
+    public void toggleFavorite(Long recipeId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserException("User not found"));
+
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RecipeException("Recipe not found"));
+
+        if (user.getFavoriteRecipes().contains(recipe)) {
+            user.getFavoriteRecipes().remove(recipe);
+        } else {
+            user.getFavoriteRecipes().add(recipe);
+        }
+        userRepository.save(user);
+    }
+
     public RecipeResponseDTO updateRecipe(Long recipeId, RecipeRequestDTO dto) {
-
-        String username = SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName();
-
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RecipeException("Recipe not found"));
 
@@ -126,43 +131,31 @@ public class RecipeService {
             throw new RecipeException("You are not allowed to update this recipe");
         }
 
-        if (dto.title() != null && !dto.title().isBlank()) {
-            recipe.setTitle(dto.title());
-        }
-
-        if (dto.description() != null && !dto.description().isBlank()) {
-            recipe.setDescription(dto.description());
-        }
-
-        if (dto.ingredients() != null && !dto.ingredients().isBlank()) {
-            recipe.setIngredients(dto.ingredients());
-        }
-
-        if (dto.instructions() != null && !dto.instructions().isBlank()) {
-            recipe.setInstructions(dto.instructions());
-        }
+        if (dto.title() != null && !dto.title().isBlank()) recipe.setTitle(dto.title());
+        if (dto.description() != null && !dto.description().isBlank()) recipe.setDescription(dto.description());
+        if (dto.ingredients() != null && !dto.ingredients().isBlank()) recipe.setIngredients(dto.ingredients());
+        if (dto.instructions() != null && !dto.instructions().isBlank()) recipe.setInstructions(dto.instructions());
+        if (dto.category() != null && !dto.category().isBlank()) recipe.setCategory(dto.category());
 
         Recipe updatedRecipe = recipeRepository.save(recipe);
-
         return recipeMapper.toResponse(updatedRecipe);
     }
 
     public void deleteRecipe(Long recipeId) {
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RecipeException("Recipe not found"));
 
         if (!recipe.getCreatedBy().getUsername().equals(username)) {
             throw new RecipeException("You are not allowed to delete this recipe");
         }
-
         recipeRepository.delete(recipe);
     }
 
-
-
-
+    private void validateDto(RecipeRequestDTO dto) {
+        if (dto.title() == null || dto.title().isBlank()) throw new RecipeException("Title must not be empty");
+        if (dto.description() == null || dto.description().isBlank()) throw new RecipeException("Description must not be empty");
+        if (dto.ingredients() == null || dto.ingredients().isBlank()) throw new RecipeException("Ingredients must not be empty");
+        if (dto.instructions() == null || dto.instructions().isBlank()) throw new RecipeException("Instructions must not be empty");
+    }
 }

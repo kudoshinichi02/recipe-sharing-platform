@@ -3,23 +3,38 @@ import api from "../api/axios";
 import RecipeCard from "../components/RecipeCard";
 
 export default function Home() {
-
   const [recipes, setRecipes] = useState([]);
   const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const categories = [
+    "All",
+    "General",
+    "Indian",
+    "Chinese",
+    "Italian",
+    "Mexican",
+    "Dessert",
+    "Breakfast"
+  ];
 
   useEffect(() => {
-    api.get("/recipes")
+    let url = "/recipes";
+    if (selectedCategory !== "All") {
+      url = `/recipes?category=${selectedCategory}`;
+    }
+
+    api.get(url)
       .then((response) => {
         setRecipes(response.data);
       })
       .catch((error) => {
         console.error("Error fetching recipes:", error);
       });
-  }, []);
+  }, [selectedCategory]);
 
   const filteredRecipes = recipes.filter((recipe) => {
     const searchText = search.toLowerCase();
-
     return (
       recipe.title?.toLowerCase().includes(searchText) ||
       recipe.ingredients?.toLowerCase().includes(searchText)
@@ -28,8 +43,6 @@ export default function Home() {
 
   return (
     <div>
-
-      {/* ✅ HERO SECTION */}
       <div
         style={{
           backgroundImage:
@@ -50,10 +63,8 @@ export default function Home() {
       </div>
 
       <div className="container mt-4">
-
         <h2 className="mb-4">All Recipes</h2>
 
-        {/* SEARCH */}
         <div className="mb-4">
           <input
             type="text"
@@ -64,18 +75,29 @@ export default function Home() {
           />
         </div>
 
-        <div className="row">
+        <div className="d-flex flex-wrap gap-2 mb-4">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              className={`btn rounded-pill ${
+                selectedCategory === cat ? "btn-dark" : "btn-outline-dark"
+              }`}
+              onClick={() => setSelectedCategory(cat)}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
 
+        <div className="row">
           {filteredRecipes.length === 0 ? (
-            <p>No recipes found.</p>
+            <p className="text-center mt-5">No recipes found.</p>
           ) : (
             filteredRecipes.map((recipe) => (
               <RecipeCard key={recipe.id} recipe={recipe} />
             ))
           )}
-
         </div>
-
       </div>
     </div>
   );
