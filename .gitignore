@@ -9,3 +9,4 @@ frontend/recipe-frontend/dist/
 
 # General
 .DS_Store
+.env
