@@ -20,6 +20,8 @@ export default function Login() {
         navigate("/");
       })
       .catch(() => {
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
         alert("Invalid credentials");
       });
   };

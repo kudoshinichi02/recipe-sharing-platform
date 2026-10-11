@@ -3,6 +3,7 @@ package com.msaad.recipes.config;
 import com.msaad.recipes.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,7 +39,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/recipes/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/recipes/my", "/api/recipes/favorites").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/recipes", "/api/recipes/{id}", "/api/recipes/paged", "/api/recipes/search").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )

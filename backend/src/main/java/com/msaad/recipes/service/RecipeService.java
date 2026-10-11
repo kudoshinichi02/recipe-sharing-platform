@@ -140,7 +140,7 @@ public class RecipeService {
         Recipe updatedRecipe = recipeRepository.save(recipe);
         return recipeMapper.toResponse(updatedRecipe);
     }
-
+    @Transactional
     public void deleteRecipe(Long recipeId) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Recipe recipe = recipeRepository.findById(recipeId)
@@ -149,6 +149,8 @@ public class RecipeService {
         if (!recipe.getCreatedBy().getUsername().equals(username)) {
             throw new RecipeException("You are not allowed to delete this recipe");
         }
+
+        recipeRepository.removeAllFavoritesForRecipe(recipeId);
         recipeRepository.delete(recipe);
     }
 
