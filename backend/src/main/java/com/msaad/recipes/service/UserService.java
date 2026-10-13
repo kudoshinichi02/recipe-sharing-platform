@@ -15,13 +15,16 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final EmailVerificationService emailVerificationService;
+
 
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       UserMapper userMapper) {
+                       UserMapper userMapper, EmailVerificationService emailVerificationService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.emailVerificationService = emailVerificationService;
     }
 
     public UserResponseDTO register(UserRequestDTO userRequestDTO) {
@@ -34,14 +37,24 @@ public class UserService {
             throw new UserException("Password must not be empty");
         }
 
+        if (userRequestDTO.email() == null || userRequestDTO.email().isBlank()){
+            throw new UserException("Email must not be empty");
+        }
+
         if (userRepository.findByUsername(userRequestDTO.username()).isPresent()) {
             throw new UserException("Username already exists");
+        }
+
+        if (userRepository.existsByEmail(userRequestDTO.email())) {
+            throw new UserException("Email already exists");
         }
 
         User user = userMapper.toEntity(userRequestDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("USER");
-
-        return userMapper.toResponse(userRepository.save(user));
+        user.setVerified(false);
+        User saved = userRepository.save(user);
+        emailVerificationService.sendVerification(saved);
+        return userMapper.toResponse(saved);
     }
 }

@@ -22,10 +22,15 @@ public class User {
     private String role;
 
     @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
     private String password;
+
+    private boolean isVerified = false;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

@@ -23,6 +23,7 @@ public class DataInitializer {
                         .username("demo")
                         .password("$2a$10$Dow1g6H1B9UjVJ1m2yqH0u6G9S0cVf2P7nJqT1jQ8L3c4L1WZQO9e") // password: demo
                         .role("USER")
+                        .email("meow@gmail.com")
                         .favoriteRecipes(new HashSet<>())
                         .build();
 
