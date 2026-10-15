@@ -17,7 +17,7 @@ public class DataInitializer {
     CommandLineRunner initData(UserRepository userRepository, RecipeRepository recipeRepository) {
         return args -> {
 
-            if (userRepository.findByUsername("demo").isPresent()) {
+            if (userRepository.findByUsername("demo").isEmpty()) {
 
                 User user = User.builder()
                         .username("demo")
