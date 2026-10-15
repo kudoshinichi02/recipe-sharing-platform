@@ -17,13 +17,14 @@ public class DataInitializer {
     CommandLineRunner initData(UserRepository userRepository, RecipeRepository recipeRepository) {
         return args -> {
 
-            if (userRepository.count() == 0) {
+            if (userRepository.findByUsername("demo").isPresent()) {
 
                 User user = User.builder()
                         .username("demo")
                         .password("$2a$10$Dow1g6H1B9UjVJ1m2yqH0u6G9S0cVf2P7nJqT1jQ8L3c4L1WZQO9e") // password: demo
                         .role("USER")
                         .email("meow@gmail.com")
+                        .isVerified(true)
                         .favoriteRecipes(new HashSet<>())
                         .build();
 

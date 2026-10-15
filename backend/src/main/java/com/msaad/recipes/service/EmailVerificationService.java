@@ -16,7 +16,7 @@ import java.util.UUID;
 @Service
 public class EmailVerificationService {
 
-    @Value("${app.base-url}")
+    @Value("${app.base-url:http://localhost:8080}")
     private String baseUrl;
 
     private final UserRepository userRepository;
